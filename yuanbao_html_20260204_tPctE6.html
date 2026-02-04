@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kedi Kafesi Sim - 猫咪咖啡馆模拟游戏</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FFB347;
+            --secondary: #FFCC33;
+            --accent: #6ECBF5;
+            --dark: #5D4037;
+            --light: #FFF9E6;
+            --text: #333333;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .logo-text h1 {
+            font-family: 'Fredoka One', cursive;
+            color: white;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* 英雄区域样式 */
+        .hero {
+            background: linear-gradient(rgba(255, 179, 71, 0.9), rgba(255, 204, 51, 0.9)), url('https://images.unsplash.com/photo-1573866926487-a1865558a9cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 50px;
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .cta-button:hover {
+            background-color: #4da8da;
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button.secondary {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .cta-button.secondary:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* 游戏特色区域 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--dark);
+            font-size: 2.5rem;
+            font-family: 'Fredoka One', cursive;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background-color: var(--accent);
+            margin: 15px auto;
+            border-radius: 5px;
+        }
+
+        .features {
+            padding: 60px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-img {
+            height: 200px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            font-size: 4rem;
+        }
+
+        .feature-content {
+            padding: 25px;
+        }
+
+        .feature-content h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* 游戏截图区域 */
+        .screenshots {
+            padding: 60px 0;
+            background-color: rgba(110, 203, 245, 0.1);
+            border-radius: 30px;
+            margin-bottom: 50px;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .screenshot-item {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot-item:hover {
+            transform: scale(1.05);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 游戏功能区域 */
+        .game-features {
+            padding: 60px 0;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            background-color: rgba(255, 179, 71, 0.1);
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        /* 使用条款区域 */
+        .terms {
+            padding: 60px 0;
+            background-color: rgba(93, 64, 55, 0.05);
+            border-radius: 30px;
+            margin-bottom: 50px;
+        }
+
+        .terms-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .terms-content h3 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .terms-text {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .terms-text p {
+            margin-bottom: 15px;
+        }
+
+        /* 联系区域 */
+        .contact {
+            padding: 60px 0;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .company-logo {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .contact-info h3 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .email-link {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 底部样式 */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--secondary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航栏 -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cat"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Kedi Kafesi Sim</h1>
+                    <p>QUANTUM MIRAGE LIMITED</p>
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">首页</a></li>
+                    <li><a href="#features">游戏特色</a></li>
+                    <li><a href="#screenshots">游戏截图</a></li>
+                    <li><a href="#terms">使用条款</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+            </nav>
+            
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="zh">简中</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="tr">TR</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2 lang="zh">打造您梦想中的猫咪咖啡馆！</h2>
+            <h2 lang="en" style="display:none">Build Your Dream Cat Cafe!</h2>
+            <h2 lang="tr" style="display:none">Hayalinizdeki Kedi Kafesini Kurun!</h2>
+            
+            <p lang="zh">在Kedi Kafesi Sim中，您可以收集可爱的猫咪，升级咖啡馆设施，雇佣员工，并将您的小店发展成为最受欢迎的猫咪天堂！</p>
+            <p lang="en" style="display:none">In Kedi Kafesi Sim, you can collect adorable cats, upgrade cafe facilities, hire staff, and grow your little shop into the most popular cat paradise!</p>
+            <p lang="tr" style="display:none">Kedi Kafesi Sim'de sevimli kediler toplayabilir, kafe tesislerini yükseltebilir, personel işe alabilir ve küçük dükkanınızı en popüler kedi cennetine dönüştürebilirsiniz!</p>
+            
+            <a href="#download" class="cta-button" lang="zh">立即下载</a>
+            <a href="#download" class="cta-button" lang="en" style="display:none">Download Now</a>
+            <a href="#download" class="cta-button" lang="tr" style="display:none">Hemen İndir</a>
+            
+            <a href="#features" class="cta-button secondary" lang="zh">了解更多</a>
+            <a href="#features" class="cta-button secondary" lang="en" style="display:none">Learn More</a>
+            <a href="#features" class="cta-button secondary" lang="tr" style="display:none">Daha Fazla Bilgi</a>
+        </div>
+    </section>
+
+    <!-- 游戏特色区域 -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title" lang="zh">游戏特色</h2>
+            <h2 class="section-title" lang="en" style="display:none">Game Features</h2>
+            <h2 class="section-title" lang="tr" style="display:none">Oyun Özellikleri</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-img" style="background-color: #FFEAA7;">
+                        <i class="fas fa-cat"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 lang="zh">收集可爱猫咪</h3>
+                        <h3 lang="en" style="display:none">Collect Cute Cats</h3>
+                        <h3 lang="tr" style="display:none">Sevimli Kediler Toplayın</h3>
+                        
+                        <p lang="zh">发现并收集各种稀有和可爱的猫咪，每只都有独特的个性与能力。</p>
+                        <p lang="en" style="display:none">Discover and collect various rare and cute cats, each with unique personality and abilities.</p>
+                        <p lang="tr" style="display:none">Eşsiz kişiliği ve yetenekleri olan çeşitli nadir ve sevimli kedileri keşfedin ve toplayın.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-img" style="background-color: #A29BFE;">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 lang="zh">管理咖啡馆</h3>
+                        <h3 lang="en" style="display:none">Manage Your Cafe</h3>
+                        <h3 lang="tr" style="display:none">Kafenizi Yönetin</h3>
+                        
+                        <p lang="zh">升级设施，雇佣员工，布置装饰，让您的猫咪咖啡馆成为最受欢迎的地方。</p>
+                        <p lang="en" style="display:none">Upgrade facilities, hire staff, arrange decorations to make your cat cafe the most popular spot.</p>
+                        <p lang="tr" style="display:none">Kedi kafenizi en popüler yer haline getirmek için tesisleri yükseltin, personel işe alın, dekorasyonlar düzenleyin.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-img" style="background-color: #74B9FF;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 lang="zh">与其他咖啡馆竞争</h3>
+                        <h3 lang="en" style="display:none">Compete with Other Cafes</h3>
+                        <h3 lang="tr" style="display:none">Diğer Kafelerle Yarışın</h3>
+                        
+                        <p lang="zh">通过提高评级，在排行榜上超越其他咖啡馆，成为地区最佳猫咪咖啡馆。</p>
+                        <p lang="en" style="display:none">Increase your rating, surpass other cafes on the leaderboard, and become the best cat cafe in the region.</p>
+                        <p lang="tr" style="display:none">Derecenizi artırın, liderlik tablosunda diğer kafeleri geçin ve bölgenin en iyi kedi kafesi olun.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏截图区域 -->
+    <section class="screenshots" id="screenshots">
+        <div class="container">
+            <h2 class="section-title" lang="zh">游戏截图</h2>
+            <h2 class="section-title" lang="en" style="display:none">Screenshots</h2>
+            <h2 class="section-title" lang="tr" style="display:none">Oyun Görüntüleri</h2>
+            
+            <div class="screenshots-grid">
+                <div class="screenshot-item">
+                    <div class="feature-img" style="background-color: #FFEAA7; height: 200px;">
+                        <i class="fas fa-gamepad" style="font-size: 3rem;"></i>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="feature-img" style="background-color: #A29BFE; height: 200px;">
+                        <i class="fas fa-paw" style="font-size: 3rem;"></i>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="feature-img" style="background-color: #74B9FF; height: 200px;">
+                        <i class="fas fa-coffee" style="font-size: 3rem;"></i>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="feature-img" style="background-color: #55EFC4; height: 200px;">
+                        <i class="fas fa-chart-line" style="font-size: 3rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏功能区域 -->
+    <section class="game-features">
+        <div class="container">
+            <h2 class="section-title" lang="zh">游戏功能</h2>
+            <h2 class="section-title" lang="en" style="display:none">Gameplay Features</h2>
+            <h2 class="section-title" lang="tr" style="display:none">Oyun İşlevleri</h2>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div>
+                        <h4 lang="zh">猫咪房屋升级</h4>
+                        <h4 lang="en" style="display:none">Cat House Upgrade</h4>
+                        <h4 lang="tr" style="display:none">Kedi Evi Yükseltme</h4>
+                        <p lang="zh">升级猫床、猫抓板、猫砂盆和玩具，提高猫咪的幸福感。</p>
+                        <p lang="en" style="display:none">Upgrade cat beds, scratchers, litter boxes and toys to increase cat happiness.</p>
+                        <p lang="tr" style="display:none">Kedi mutluluğunu artırmak için kedi yatakları, tırmalama tahtaları, kum kapları ve oyuncakları yükseltin.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h4 lang="zh">员工管理</h4>
+                        <h4 lang="en" style="display:none">Staff Management</h4>
+                        <h4 lang="tr" style="display:none">Personel Yönetimi</h4>
+                        <p lang="zh">雇佣和管理员工，提高咖啡馆的运营效率。</p>
+                        <p lang="en" style="display:none">Hire and manage staff to improve cafe operation efficiency.</p>
+                        <p lang="tr" style="display:none">Kafe işletme verimliliğini artırmak için personel işe alın ve yönetin.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div>
+                        <h4 lang="zh">寻宝活动</h4>
+                        <h4 lang="en" style="display:none">Treasure Hunt</h4>
+                        <h4 lang="tr" style="display:none">Hazine Avı</h4>
+                        <p lang="zh">参与寻宝活动，赢取稀有物品和独家奖励。</p>
+                        <p lang="en" style="display:none">Participate in treasure hunts to win rare items and exclusive rewards.</p>
+                        <p lang="tr" style="display:none">Nadir eşyalar ve ödüller kazanmak için hazine avlarına katılın.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-merge"></i>
+                    </div>
+                    <div>
+                        <h4 lang="zh">合并与收集</h4>
+                        <h4 lang="en" style="display:none">Merge & Collect</h4>
+                        <h4 lang="tr" style="display:none">Birleştir & Topla</h4>
+                        <p lang="zh">合并物品以创建更高级的物品，完成您的收集。</p>
+                        <p lang="en" style="display:none">Merge items to create higher level items and complete your collection.</p>
+                        <p lang="tr" style="display:none">Koleksiyonunuzu tamamlamak için eşyaları birleştirerek daha yüksek seviye eşyalar oluşturun.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用条款区域 -->
+    <section class="terms" id="terms">
+        <div class="container">
+            <h2 class="section-title" lang="zh">使用条款</h2>
+            <h2 class="section-title" lang="en" style="display:none">Terms of Use</h2>
+            <h2 class="section-title" lang="tr" style="display:none">Kullanım Koşulları</h2>
+            
+            <div class="terms-content">
+                <h3 lang="zh">Kedi Kafesi Sim 使用条款</h3>
+                <h3 lang="en" style="display:none">Kedi Kafesi Sim Terms of Use</h3>
+                <h3 lang="tr" style="display:none">Kedi Kafesi Sim Kullanım Koşulları</h3>
+                
+                <div class="terms-text">
+                    <p lang="zh"><strong>1. 接受条款</strong><br>通过下载、安装或使用Kedi Kafesi Sim游戏，您同意遵守这些使用条款。如果您不同意这些条款，请不要使用本游戏。</p>
+                    <p lang="zh"><strong>2. 游戏内容</strong><br>游戏内容，包括但不限于文字、图形、图像、声音、视频和代码，均为QUANTUM MIRAGE LIMITED的财产，受版权和其他知识产权法保护。</p>
+                    <p lang="zh"><strong>3. 用户行为</strong><br>您同意不会利用本游戏进行任何非法活动，也不会干扰游戏的正常运行。禁止使用任何自动化工具或第三方软件修改游戏体验。</p>
+                    <p lang="zh"><strong>4. 虚拟商品</strong><br>游戏内可能提供虚拟商品购买。所有虚拟商品购买均为最终交易，不可退款，除非法律另有规定。</p>
+                    <p lang="zh"><strong>5. 隐私政策</strong><br>我们重视您的隐私。我们的隐私政策说明了我们如何收集、使用和保护您的个人信息。使用本游戏即表示您同意隐私政策的条款。</p>
+                    <p lang="zh"><strong>6. 免责声明</strong><br>游戏按"现状"提供，不提供任何明示或暗示的保证。QUANTUM MIRAGE LIMITED不对游戏中的任何错误或中断承担责任。</p>
+                    <p lang="zh"><strong>7. 条款修改</strong><br>我们保留随时修改这些条款的权利。修改后的条款将在游戏内或通过其他适当方式通知您后生效。</p>
+                    
+                    <p lang="en" style="display:none"><strong>1. Acceptance of Terms</strong><br>By downloading, installing, or using the Kedi Kafesi Sim game, you agree to comply with these Terms of Use. If you do not agree to these terms, please do not use the game.</p>
+                    <p lang="en" style="display:none"><strong>2. Game Content</strong><br>The game content, including but not limited to text, graphics, images, sounds, videos, and code, is the property of QUANTUM MIRAGE LIMITED and is protected by copyright and other intellectual property laws.</p>
+                    <p lang="en" style="display:none"><strong>3. User Conduct</strong><br>You agree not to use the game for any illegal activities or to interfere with the normal operation of the game. The use of any automated tools or third-party software to modify the game experience is prohibited.</p>
+                    <p lang="en" style="display:none"><strong>4. Virtual Goods</strong><br>The game may offer virtual goods for purchase. All purchases of virtual goods are final transactions and non-refundable, unless otherwise required by law.</p>
+                    <p lang="en" style="display:none"><strong>5. Privacy Policy</strong><br>We value your privacy. Our privacy policy explains how we collect, use, and protect your personal information. By using the game, you agree to the terms of the privacy policy.</p>
+                    <p lang="en" style="display:none"><strong>6. Disclaimer</strong><br>The game is provided "as is" without any express or implied warranties. QUANTUM MIRAGE LIMITED is not responsible for any errors or interruptions in the game.</p>
+                    <p lang="en" style="display:none"><strong>7. Modification of Terms</strong><br>We reserve the right to modify these terms at any time. The modified terms will take effect after being notified to you through the game or other appropriate means.</p>
+                    
+                    <p lang="tr" style="display:none"><strong>1. Koşulların Kabulü</strong><br>Kedi Kafesi Sim oyununu indirerek, yükleyerek veya kullanarak, bu Kullanım Koşullarına uymayı kabul etmiş olursunuz. Bu koşulları kabul etmiyorsanız, lütfen oyunu kullanmayın.</p>
+                    <p lang="tr" style="display:none"><strong>2. Oyun İçeriği</strong><br>Oyun içeriği, metin, grafikler, görüntüler, sesler, videolar ve kod dahil olmak üzere QUANTUM MIRAGE LIMITED'in mülkiyetindedir ve telif hakkı ve diğer fikri mülkiyet yasaları ile korunmaktadır.</p>
+                    <p lang="tr" style="display:none"><strong>3. Kullanıcı Davranışı</strong><br>Oyunu herhangi bir yasa dışı faaliyet için kullanmayacağınızı veya oyunun normal işleyişine müdahale etmeyeceğinizi kabul edersiniz. Oyun deneyimini değiştirmek için herhangi bir otomatik araç veya üçüncü taraf yazılım kullanılması yasaktır.</p>
+                    <p lang="tr" style="display:none"><strong>4. Sanal Mallar</strong><br>Oyun, satın alınabilir sanal mallar sunabilir. Sanal malların tüm satın alımları, yasa tarafından başka bir şekilde gerekli kılınmadıkça, nihai işlemlerdir ve iade edilemez.</p>
+                    <p lang="tr" style="display:none"><strong>5. Gizlilik Politikası</strong><br>Gizliliğinize değer veriyoruz. Gizlilik politikamız, kişisel bilgilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklar. Oyunu kullanarak, gizlilik politikasının koşullarını kabul etmiş olursunuz.</p>
+                    <p lang="tr" style="display:none"><strong>6. Sorumluluk Reddi</strong><br>Oyun, "olduğu gibi" herhangi bir açık veya zımni garanti olmaksızın sağlanmaktadır. QUANTUM MIRAGE LIMITED, oyundaki herhangi bir hata veya kesintiden sorumlu değildir.</p>
+                    <p lang="tr" style="display:none"><strong>7. Koşullarda Değişiklik</strong><br>Bu koşulları istediğimiz zaman değiştirme hakkını saklı tutarız. Değiştirilen koşullar, oyun içinde veya diğer uygun yollarla size bildirildikten sonra yürürlüğe girer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系区域 -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title" lang="zh">联系我们</h2>
+            <h2 class="section-title" lang="en" style="display:none">Contact Us</h2>
+            <h2 class="section-title" lang="tr" style="display:none">İletişim</h2>
+            
+            <div class="contact-info">
+                <div class="company-logo">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3>QUANTUM MIRAGE LIMITED</h3>
+                
+                <p lang="zh">如果您对Kedi Kafesi Sim有任何问题、建议或反馈，请通过以下方式联系我们：</p>
+                <p lang="en" style="display:none">If you have any questions, suggestions, or feedback about Kedi Kafesi Sim, please contact us at:</p>
+                <p lang="tr" style="display:none">Kedi Kafesi Sim hakkında herhangi bir sorunuz, öneriniz veya geri bildiriminiz varsa, lütfen bizimle iletişime geçin:</p>
+                
+                <a href="mailto:hlh@quantummiragelimited.com" class="email-link">
+                    <i class="fas fa-envelope"></i> hlh@quantummiragelimited.com
+                </a>
+                
+                <p lang="zh" style="margin-top: 20px;">我们珍视每一位玩家的反馈，并将尽快回复您。</p>
+                <p lang="en" style="margin-top: 20px; display:none">We value feedback from every player and will respond to you as soon as possible.</p>
+                <p lang="tr" style="margin-top: 20px; display:none">Her oyuncudan gelen geri bildirime değer veriyoruz ve en kısa sürede size yanıt vereceğiz.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Kedi Kafesi Sim</h4>
+                    <p lang="zh">打造您梦想中的猫咪咖啡馆！</p>
+                    <p lang="en" style="display:none">Build Your Dream Cat Cafe!</p>
+                    <p lang="tr" style="display:none">Hayalinizdeki Kedi Kafesini Kurun!</p>
+                    
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 lang="zh">快速链接</h4>
+                    <h4 lang="en" style="display:none">Quick Links</h4>
+                    <h4 lang="tr" style="display:none">Hızlı Bağlantılar</h4>
+                    <ul>
+                        <li><a href="#home" lang="zh">首页</a><a href="#home" lang="en" style="display:none">Home</a><a href="#home" lang="tr" style="display:none">Ana Sayfa</a></li>
+                        <li><a href="#features" lang="zh">游戏特色</a><a href="#features" lang="en" style="display:none">Features</a><a href="#features" lang="tr" style="display:none">Özellikler</a></li>
+                        <li><a href="#screenshots" lang="zh">游戏截图</a><a href="#screenshots" lang="en" style="display:none">Screenshots</a><a href="#screenshots" lang="tr" style="display:none">Görüntüler</a></li>
+                        <li><a href="#terms" lang="zh">使用条款</a><a href="#terms" lang="en" style="display:none">Terms</a><a href="#terms" lang="tr" style="display:none">Koşullar</a></li>
+                        <li><a href="#contact" lang="zh">联系我们</a><a href="#contact" lang="en" style="display:none">Contact</a><a href="#contact" lang="tr" style="display:none">İletişim</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 lang="zh">下载游戏</h4>
+                    <h4 lang="en" style="display:none">Download Game</h4>
+                    <h4 lang="tr" style="display:none">Oyunu İndir</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-google-play"></i> Google Play</a></li>
+                        <li><a href="#"><i class="fab fa-app-store"></i> App Store</a></li>
+                        <li><a href="#"><i class="fas fa-globe"></i> 官方网站</a><a href="#" lang="en" style="display:none">Official Website</a><a href="#" lang="tr" style="display:none">Resmi Web Sitesi</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 QUANTUM MIRAGE LIMITED. <span lang="zh">保留所有权利。</span><span lang="en" style="display:none">All rights reserved.</span><span lang="tr" style="display:none">Tüm hakları saklıdır.</span></p>
+                <p>Kedi Kafesi Sim 是一款模拟经营游戏</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 多语言切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const elementsByLang = {
+                'zh': document.querySelectorAll('[lang="zh"]'),
+                'en': document.querySelectorAll('[lang="en"]'),
+                'tr': document.querySelectorAll('[lang="tr"]')
+            };
+            
+            // 设置默认语言为中文
+            setLanguage('zh');
+            
+            // 为语言按钮添加点击事件
+            langButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    setLanguage(lang);
+                    
+                    // 更新活动按钮状态
+                    langButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 设置语言的函数
+            function setLanguage(lang) {
+                // 隐藏所有语言元素
+                Object.values(elementsByLang).forEach(langElements => {
+                    langElements.forEach(element => {
+                        element.style.display = 'none';
+                    });
+                });
+                
+                // 显示所选语言元素
+                if (elementsByLang[lang]) {
+                    elementsByLang[lang].forEach(element => {
+                        element.style.display = element.tagName === 'H2' ? 'block' : 'inline';
+                        if (element.tagName === 'P' || element.tagName === 'H3' || element.tagName === 'H4' || element.tagName === 'SPAN') {
+                            element.style.display = 'block';
+                        }
+                    });
+                }
+            }
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.style.padding = '10px 0';
+                } else {
+                    header.style.padding = '20px 0';
+                }
+            });
+            
+            // 平滑滚动到锚点
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
