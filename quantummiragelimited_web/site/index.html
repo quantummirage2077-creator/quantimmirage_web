@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Anvil Studio</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: grid; place-items: center; background: #0a0a0c; color: #f4f2ec;
+      font: 15px/1.6 system-ui, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+    a { color: #d7ff3e; }
+  </style>
+  <script>
+    (function () {
+      var lang = "en";
+      try {
+        var saved = localStorage.getItem("na:lang");
+        var nav = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+        nav = nav.toLowerCase();
+        lang = saved || (nav.indexOf("zh") === 0 ? "zh" : nav.indexOf("tr") === 0 ? "tr" : "en");
+      } catch (e) {}
+      location.replace(lang + "/index.html");
+    })();
+  </script>
+</head>
+<body>
+  <p>Neon Anvil Studio — <a href="en/index.html">Enter</a></p>
+</body>
+</html>
